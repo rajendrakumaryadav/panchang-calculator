@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-import { NAKSHATRA_NAMES, RASHI_NAMES } from '../lib/constants';
+import { NAKSHATRA_NAMES_BY_LOCALE, RASHI_NAMES_BY_LOCALE } from '../lib/constants';
+import { localizeName, t } from '../lib/i18n';
 
 function degToRad(value) {
   return (value * Math.PI) / 180;
@@ -44,6 +45,7 @@ export default function ZodiacThreeScene({
   moonLongitude,
   moonNakshatraIndex,
   moonNakshatraNames,
+  locale,
   rotation,
   zoom,
   onRotationChange,
@@ -123,6 +125,8 @@ export default function ZodiacThreeScene({
     rim.position.z = -0.04;
     wheelGroup.add(rim);
 
+    const rashiNames = RASHI_NAMES_BY_LOCALE[locale] || RASHI_NAMES_BY_LOCALE.en;
+    const nakshatraNames = NAKSHATRA_NAMES_BY_LOCALE[locale] || NAKSHATRA_NAMES_BY_LOCALE.en;
     const nakSegment = 360 / 27;
 
     for (let i = 0; i < 12; i += 1) {
@@ -130,7 +134,7 @@ export default function ZodiacThreeScene({
       wheelGroup.add(makeLine(a, 2.9, 4.65, '#f2bc62', 0.95));
 
       const labelAngle = degToRad(i * 30 + 15 - 90);
-      const label = makeTextSprite(RASHI_NAMES[i], '#ffeac4', 58);
+      const label = makeTextSprite(rashiNames[i], '#ffeac4', 58);
       label.position.set(Math.cos(labelAngle) * 5.2, Math.sin(labelAngle) * 5.2, 0.12);
       wheelGroup.add(label);
     }
@@ -141,7 +145,7 @@ export default function ZodiacThreeScene({
       wheelGroup.add(makeLine(a, 3.25, 4.2, emph ? '#91dbbf' : '#4e7286', emph ? 0.95 : 0.7));
 
       const labelAngle = degToRad(i * nakSegment + nakSegment * 0.5 - 90);
-      const label = makeTextSprite(NAKSHATRA_NAMES[i], '#9ce6cb', 36);
+      const label = makeTextSprite(nakshatraNames[i], '#9ce6cb', 36);
       label.scale.set(1.45, 0.32, 1);
       label.position.set(Math.cos(labelAngle) * 3.1, Math.sin(labelAngle) * 3.1, 0.1);
       wheelGroup.add(label);
@@ -298,13 +302,13 @@ export default function ZodiacThreeScene({
       renderer.dispose();
       container.innerHTML = '';
     };
-  }, [onRotationChange]);
+  }, [locale, onRotationChange]);
 
   return (
     <div className="zodiac-wrapper">
       <div ref={containerRef} className="zodiac-three" />
       <p className="hint">
-        3D view: Rashis and Nakshatras are both rendered on the wheel. Highlighted Nakshatra: {moonNakshatraNames?.en || NAKSHATRA_NAMES[(moonNakshatraIndex || 1) - 1]}
+        {t(locale, 'threeDHint')} {t(locale, 'highlightedNakshatra')}: {localizeName(moonNakshatraNames, locale)}
       </p>
     </div>
   );

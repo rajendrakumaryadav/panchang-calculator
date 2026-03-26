@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { NAKSHATRA_NAMES, RASHI_NAMES } from '../lib/constants';
+import { NAKSHATRA_NAMES_BY_LOCALE, RASHI_NAMES_BY_LOCALE } from '../lib/constants';
+import { localizeName, t } from '../lib/i18n';
 import { longitudeToRadian, SEGMENT_27 } from '../lib/math';
 
 function drawLabel(ctx, text, x, y, color, font = '12px Space Grotesk') {
@@ -18,6 +19,7 @@ export default function ZodiacCanvas({
   moonLongitude,
   moonNakshatraIndex,
   moonNakshatraNames,
+  locale,
   rotation,
   zoom,
   onRotationChange,
@@ -31,6 +33,9 @@ export default function ZodiacCanvas({
     }
     return (moonNakshatraIndex - 1) * SEGMENT_27;
   }, [moonNakshatraIndex]);
+
+  const rashiNames = RASHI_NAMES_BY_LOCALE[locale] || RASHI_NAMES_BY_LOCALE.en;
+  const nakshatraNames = NAKSHATRA_NAMES_BY_LOCALE[locale] || NAKSHATRA_NAMES_BY_LOCALE.en;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -76,7 +81,7 @@ export default function ZodiacCanvas({
       const labelR = radius + 18;
       const lx = Math.cos(angle + (15 * Math.PI) / 180) * labelR;
       const ly = Math.sin(angle + (15 * Math.PI) / 180) * labelR;
-      drawLabel(ctx, RASHI_NAMES[i], lx, ly, '#ffe7b0', '11px Spectral');
+      drawLabel(ctx, rashiNames[i], lx, ly, '#ffe7b0', '11px Spectral');
     }
 
     for (let i = 0; i < 27; i += 1) {
@@ -94,7 +99,7 @@ export default function ZodiacCanvas({
       const labelR = radius * 0.62;
       const nx = Math.cos(mid) * labelR;
       const ny = Math.sin(mid) * labelR;
-      drawLabel(ctx, NAKSHATRA_NAMES[i], nx, ny, '#9de4ca', '9px Space Grotesk');
+      drawLabel(ctx, nakshatraNames[i], nx, ny, '#9de4ca', '9px Space Grotesk');
     }
 
     const sectorStart = longitudeToRadian(moonNakshatraStart, rotation);
@@ -128,13 +133,13 @@ export default function ZodiacCanvas({
 
     drawLabel(
       ctx,
-      `Highlighted Nakshatra: ${moonNakshatraNames?.en || NAKSHATRA_NAMES[(moonNakshatraIndex || 1) - 1]} | ${moonNakshatraNames?.hi || ''} | ${moonNakshatraNames?.sa || ''}`,
+      `${t(locale, 'highlightedNakshatra')}: ${localizeName(moonNakshatraNames, locale) || nakshatraNames[(moonNakshatraIndex || 1) - 1]}`,
       width / 2,
       height - 20,
       '#bbf5de',
       '12px Space Grotesk',
     );
-  }, [moonNakshatraIndex, moonNakshatraNames, moonNakshatraStart, moonLongitude, rotation, sunLongitude, zoom]);
+  }, [locale, moonNakshatraIndex, moonNakshatraNames, moonNakshatraStart, moonLongitude, nakshatraNames, rashiNames, rotation, sunLongitude, zoom]);
 
   function onMouseDown(event) {
     setDragState({ x: event.clientX, baseRotation: rotation });
@@ -164,7 +169,7 @@ export default function ZodiacCanvas({
         onMouseLeave={onMouseUp}
         onMouseUp={onMouseUp}
       />
-      <p className="hint">Drag horizontally to rotate the wheel. Use zoom slider for scale.</p>
+      <p className="hint">{t(locale, 'dragHint')}</p>
     </div>
   );
 }

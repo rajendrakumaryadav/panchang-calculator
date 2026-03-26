@@ -5,6 +5,7 @@ import FormulaPanel from './components/FormulaPanel';
 import PanchangPanel from './components/PanchangPanel';
 import ZodiacCanvas from './components/ZodiacCanvas';
 import ZodiacThreeScene from './components/ZodiacThreeScene';
+import { t } from './lib/i18n';
 import { usePanchangStore } from './store/usePanchangStore';
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
     speedDaysPerSecond,
     playing,
     visualizationMode,
+    locale,
     zoom,
     rotation,
     showFormulas,
@@ -26,6 +28,7 @@ export default function App() {
     setSpeedDaysPerSecond,
     setPlaying,
     setVisualizationMode,
+    setLocale,
     setZoom,
     setRotation,
     setShowFormulas,
@@ -107,10 +110,8 @@ export default function App() {
   return (
     <main className="layout">
       <section className="visual-pane">
-        <h1>Sidereal Zodiac Panchang Visualizer</h1>
-        <p className="subtitle">
-          Interactive Surya Siddhanta-inspired model for Sun/Moon motion in a 360-degree sidereal zodiac.
-        </p>
+        <h1>{t(locale, 'appTitle')}</h1>
+        <p className="subtitle">{t(locale, 'appSubtitle')}</p>
 
         {visualizationMode === '3d' ? (
           <ZodiacThreeScene
@@ -118,6 +119,7 @@ export default function App() {
             moonLongitude={longitudes.moon}
             moonNakshatraIndex={longitudes.moonNakshatraIndex}
             moonNakshatraNames={longitudes.moonNakshatraNames}
+            locale={locale}
             rotation={rotation}
             zoom={zoom}
             onRotationChange={setRotation}
@@ -128,6 +130,7 @@ export default function App() {
             moonLongitude={longitudes.moon}
             moonNakshatraIndex={longitudes.moonNakshatraIndex}
             moonNakshatraNames={longitudes.moonNakshatraNames}
+            locale={locale}
             rotation={rotation}
             zoom={zoom}
             onRotationChange={setRotation}
@@ -139,6 +142,8 @@ export default function App() {
         <ControlPanel
           dateTimeInput={dateTimeInput}
           setDateTimeInput={setDateTimeInput}
+          locale={locale}
+          setLocale={setLocale}
           mode={mode}
           setMode={setMode}
           speedDaysPerSecond={speedDaysPerSecond}
@@ -156,11 +161,11 @@ export default function App() {
           setShowFormulas={setShowFormulas}
         />
 
-        {loading ? <p className="status">Calculating...</p> : null}
+        {loading ? <p className="status">{t(locale, 'calculating')}</p> : null}
         {error ? <p className="status error">{error}</p> : null}
 
-        <PanchangPanel data={data} />
-        {showFormulas ? <FormulaPanel formulas={formulas} /> : null}
+        <PanchangPanel data={data} locale={locale} />
+        {showFormulas ? <FormulaPanel formulas={formulas} locale={locale} /> : null}
       </aside>
     </main>
   );

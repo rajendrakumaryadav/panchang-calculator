@@ -1,6 +1,10 @@
+import { LOCALES, t } from '../lib/i18n';
+
 export default function ControlPanel({
   dateTimeInput,
   setDateTimeInput,
+  locale,
+  setLocale,
   mode,
   setMode,
   speedDaysPerSecond,
@@ -26,10 +30,19 @@ export default function ControlPanel({
 
   return (
     <section className="card">
-      <h2>Simulation Controls</h2>
+      <h2>{t(locale, 'simulationControls')}</h2>
 
       <label>
-        Date / Time (UTC)
+        {t(locale, 'language')}
+        <select value={locale} onChange={(event) => setLocale(event.target.value)}>
+          {LOCALES.map((item) => (
+            <option key={item} value={item}>{item.toUpperCase()}</option>
+          ))}
+        </select>
+      </label>
+
+      <label>
+        {t(locale, 'dateTime')}
         <input
           type="datetime-local"
           value={dateTimeInput}
@@ -38,23 +51,23 @@ export default function ControlPanel({
       </label>
 
       <label>
-        Position Mode
+        {t(locale, 'positionMode')}
         <select value={mode} onChange={(event) => setMode(event.target.value)}>
-          <option value="true">True (Manda corrected)</option>
-          <option value="mean">Mean longitude</option>
+          <option value="true">{t(locale, 'modeTrue')}</option>
+          <option value="mean">{t(locale, 'modeMean')}</option>
         </select>
       </label>
 
       <label>
-        Visualization Mode
+        {t(locale, 'visualizationMode')}
         <select value={visualizationMode} onChange={(event) => setVisualizationMode(event.target.value)}>
-          <option value="2d">2D Wheel</option>
-          <option value="3d">3D Wheel</option>
+          <option value="2d">{t(locale, 'wheel2d')}</option>
+          <option value="3d">{t(locale, 'wheel3d')}</option>
         </select>
       </label>
 
       <label>
-        Speed (days per second): {speedDaysPerSecond.toFixed(2)}
+        {t(locale, 'speed')}: {speedDaysPerSecond.toFixed(2)}
         <input
           type="range"
           min="0.05"
@@ -67,14 +80,14 @@ export default function ControlPanel({
 
       <div className="row">
         <button type="button" onClick={onPlayPauseClick}>
-          {playing ? 'Pause' : 'Play'}
+          {playing ? t(locale, 'pause') : t(locale, 'play')}
         </button>
-        <button type="button" onClick={() => stepDays(-1)}>Step -1 day</button>
-        <button type="button" onClick={() => stepDays(1)}>Step +1 day</button>
+        <button type="button" onClick={() => stepDays(-1)}>{t(locale, 'stepMinus')}</button>
+        <button type="button" onClick={() => stepDays(1)}>{t(locale, 'stepPlus')}</button>
       </div>
 
       <label>
-        Zoom: {zoom.toFixed(2)}x
+        {t(locale, 'zoom')}: {zoom.toFixed(2)}x
         <input
           type="range"
           min="0.65"
@@ -86,7 +99,7 @@ export default function ControlPanel({
       </label>
 
       <label>
-        Rotation: {rotation.toFixed(1)} deg
+        {t(locale, 'rotation')}: {rotation.toFixed(1)} deg
         <input
           type="range"
           min="0"
@@ -103,7 +116,7 @@ export default function ControlPanel({
           checked={showFormulas}
           onChange={(event) => setShowFormulas(event.target.checked)}
         />
-        Show formulas and explanations
+        {t(locale, 'showFormulas')}
       </label>
     </section>
   );

@@ -1,4 +1,6 @@
-export default function FormulaPanel({ formulas }) {
+import { t } from '../lib/i18n';
+
+export default function FormulaPanel({ formulas, locale }) {
   const entries = Object.entries(formulas || {});
   if (!entries.length) {
     return null;
@@ -6,13 +8,11 @@ export default function FormulaPanel({ formulas }) {
 
   return (
     <section className="card">
-      <h2>Formula Layer</h2>
+      <h2>{t(locale, 'formulaLayer')}</h2>
       {entries.map(([key, value]) => (
         <div key={key} className="formula-row">
           <h4>{key}</h4>
-          <code>{value.en}</code>
-          <code>{value.hi}</code>
-          <code>{value.sa}</code>
+          <code>{value[locale] || value.en}</code>
         </div>
       ))}
     </section>
