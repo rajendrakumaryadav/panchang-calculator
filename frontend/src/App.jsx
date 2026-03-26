@@ -4,6 +4,7 @@ import ControlPanel from './components/ControlPanel';
 import FormulaPanel from './components/FormulaPanel';
 import PanchangPanel from './components/PanchangPanel';
 import ZodiacCanvas from './components/ZodiacCanvas';
+import ZodiacThreeScene from './components/ZodiacThreeScene';
 import { usePanchangStore } from './store/usePanchangStore';
 
 export default function App() {
@@ -12,6 +13,7 @@ export default function App() {
     mode,
     speedDaysPerSecond,
     playing,
+    visualizationMode,
     zoom,
     rotation,
     showFormulas,
@@ -23,6 +25,7 @@ export default function App() {
     setMode,
     setSpeedDaysPerSecond,
     setPlaying,
+    setVisualizationMode,
     setZoom,
     setRotation,
     setShowFormulas,
@@ -40,11 +43,28 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    if (playing) {
+      return undefined;
+    }
+
     const timer = setTimeout(() => {
       fetchPanchang();
     }, 120);
     return () => clearTimeout(timer);
-  }, [dateTimeInput, mode, fetchPanchang]);
+  }, [playing, dateTimeInput, mode, fetchPanchang]);
+
+  useEffect(() => {
+    if (!playing) {
+      return undefined;
+    }
+
+    fetchPanchang();
+    const intervalId = setInterval(() => {
+      fetchPanchang();
+    }, 250);
+
+    return () => clearInterval(intervalId);
+  }, [playing, mode, fetchPanchang]);
 
   useEffect(() => {
     if (!playing) {
@@ -92,15 +112,27 @@ export default function App() {
           Interactive Surya Siddhanta-inspired model for Sun/Moon motion in a 360-degree sidereal zodiac.
         </p>
 
-        <ZodiacCanvas
-          sunLongitude={longitudes.sun}
-          moonLongitude={longitudes.moon}
-          moonNakshatraIndex={longitudes.moonNakshatraIndex}
-          moonNakshatraNames={longitudes.moonNakshatraNames}
-          rotation={rotation}
-          zoom={zoom}
-          onRotationChange={setRotation}
-        />
+        {visualizationMode === '3d' ? (
+          <ZodiacThreeScene
+            sunLongitude={longitudes.sun}
+            moonLongitude={longitudes.moon}
+            moonNakshatraIndex={longitudes.moonNakshatraIndex}
+            moonNakshatraNames={longitudes.moonNakshatraNames}
+            rotation={rotation}
+            zoom={zoom}
+            onRotationChange={setRotation}
+          />
+        ) : (
+          <ZodiacCanvas
+            sunLongitude={longitudes.sun}
+            moonLongitude={longitudes.moon}
+            moonNakshatraIndex={longitudes.moonNakshatraIndex}
+            moonNakshatraNames={longitudes.moonNakshatraNames}
+            rotation={rotation}
+            zoom={zoom}
+            onRotationChange={setRotation}
+          />
+        )}
       </section>
 
       <aside className="panel-pane">
@@ -113,6 +145,8 @@ export default function App() {
           setSpeedDaysPerSecond={setSpeedDaysPerSecond}
           playing={playing}
           setPlaying={setPlaying}
+          visualizationMode={visualizationMode}
+          setVisualizationMode={setVisualizationMode}
           stepDays={stepDays}
           zoom={zoom}
           setZoom={setZoom}

@@ -2,13 +2,22 @@ import { create } from 'zustand';
 
 import { API_BASE_URL, DEFAULT_SPEED_DAYS_PER_SECOND } from '../lib/config';
 
-const nowIso = new Date().toISOString().slice(0, 16);
+function pad(value) {
+  return String(value).padStart(2, '0');
+}
+
+function formatDateTimeLocal(date) {
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+const nowIso = formatDateTimeLocal(new Date());
 
 export const usePanchangStore = create((set, get) => ({
   dateTimeInput: nowIso,
   mode: 'true',
   speedDaysPerSecond: DEFAULT_SPEED_DAYS_PER_SECOND,
   playing: false,
+  visualizationMode: '2d',
   zoom: 1,
   rotation: 0,
   showFormulas: false,
@@ -21,6 +30,7 @@ export const usePanchangStore = create((set, get) => ({
   setMode: (mode) => set({ mode }),
   setSpeedDaysPerSecond: (speedDaysPerSecond) => set({ speedDaysPerSecond }),
   setPlaying: (playing) => set({ playing }),
+  setVisualizationMode: (visualizationMode) => set({ visualizationMode }),
   setZoom: (zoom) => set({ zoom }),
   setRotation: (rotation) => set({ rotation }),
   setShowFormulas: (showFormulas) => set({ showFormulas }),
@@ -28,7 +38,7 @@ export const usePanchangStore = create((set, get) => ({
   stepDays: (days) => {
     const date = new Date(get().dateTimeInput);
     date.setTime(date.getTime() + days * 24 * 3600 * 1000);
-    set({ dateTimeInput: date.toISOString().slice(0, 16) });
+    set({ dateTimeInput: formatDateTimeLocal(date) });
   },
 
   fetchFormulas: async () => {

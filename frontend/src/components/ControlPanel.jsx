@@ -7,6 +7,8 @@ export default function ControlPanel({
   setSpeedDaysPerSecond,
   playing,
   setPlaying,
+  visualizationMode,
+  setVisualizationMode,
   stepDays,
   zoom,
   setZoom,
@@ -15,6 +17,13 @@ export default function ControlPanel({
   showFormulas,
   setShowFormulas,
 }) {
+  const onPlayPauseClick = () => {
+    if (!playing) {
+      stepDays(1);
+    }
+    setPlaying(!playing);
+  };
+
   return (
     <section className="card">
       <h2>Simulation Controls</h2>
@@ -37,6 +46,14 @@ export default function ControlPanel({
       </label>
 
       <label>
+        Visualization Mode
+        <select value={visualizationMode} onChange={(event) => setVisualizationMode(event.target.value)}>
+          <option value="2d">2D Wheel</option>
+          <option value="3d">3D Wheel</option>
+        </select>
+      </label>
+
+      <label>
         Speed (days per second): {speedDaysPerSecond.toFixed(2)}
         <input
           type="range"
@@ -49,7 +66,7 @@ export default function ControlPanel({
       </label>
 
       <div className="row">
-        <button type="button" onClick={() => setPlaying(!playing)}>
+        <button type="button" onClick={onPlayPauseClick}>
           {playing ? 'Pause' : 'Play'}
         </button>
         <button type="button" onClick={() => stepDays(-1)}>Step -1 day</button>

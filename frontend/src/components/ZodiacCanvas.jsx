@@ -89,6 +89,12 @@ export default function ZodiacCanvas({
       ctx.moveTo(0, 0);
       ctx.lineTo(x, y);
       ctx.stroke();
+
+      const mid = longitudeToRadian(i * SEGMENT_27 + SEGMENT_27 * 0.5, rotation);
+      const labelR = radius * 0.62;
+      const nx = Math.cos(mid) * labelR;
+      const ny = Math.sin(mid) * labelR;
+      drawLabel(ctx, NAKSHATRA_NAMES[i], nx, ny, '#9de4ca', '9px Space Grotesk');
     }
 
     const sectorStart = longitudeToRadian(moonNakshatraStart, rotation);
