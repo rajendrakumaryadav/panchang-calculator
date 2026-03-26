@@ -1,0 +1,25 @@
+[project]
+name = "panchang-calculator"
+version = "0.1.0"
+description = "Interactive sidereal zodiac and Panchang calculator"
+readme = "README.md"
+authors = [
+    { name = "Rajendra Kuamr Yadav", email = "13816347+rajendrakumaryadav@users.noreply.github.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115.0",
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.6.0",
+    "python-dateutil>=2.9.0",
+    "python-dotenv>=1.0.1",
+    "uvicorn>=0.30.0",
+]
+
+[project.scripts]
+panchang-calculator = "panchang_calculator:main"
+panchang-api = "panchang_calculator.api:run"
+
+[build-system]
+requires = ["uv_build>=0.11.1,<0.12.0"]
+build-backend = "uv_build"

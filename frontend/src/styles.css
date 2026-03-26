@@ -1,0 +1,205 @@
+:root {
+  --ink: #102133;
+  --paper: #f3ebdc;
+  --card: #fff8eb;
+  --sun: #d08a2f;
+  --moon: #3a6f8f;
+  --accent: #2f8f77;
+  --line: #ddccb0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 16% 20%, #ffe8c1 0%, #f2dfc4 26%, transparent 30%),
+    radial-gradient(circle at 80% 24%, #f7cf9f 0%, #efd1ad 20%, transparent 36%),
+    linear-gradient(135deg, #f7e8d2 0%, #eadcc7 46%, #dccdaf 100%);
+  min-height: 100vh;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(480px, 1fr) minmax(340px, 460px);
+  gap: 1.2rem;
+  padding: 1.1rem;
+}
+
+.visual-pane,
+.panel-pane {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: color-mix(in oklab, var(--paper), white 26%);
+  box-shadow: 0 14px 32px rgba(79, 61, 42, 0.18);
+}
+
+.visual-pane {
+  padding: 1rem;
+}
+
+.panel-pane {
+  padding: 0.9rem;
+  overflow-y: auto;
+  max-height: calc(100vh - 2.2rem);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0.15rem 0 0.6rem;
+  font-family: 'Spectral', serif;
+}
+
+.subtitle {
+  margin: 0 0 0.8rem;
+  opacity: 0.85;
+}
+
+.zodiac-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.zodiac-canvas {
+  width: min(82vw, 680px);
+  height: min(82vw, 680px);
+  max-width: 100%;
+  border-radius: 14px;
+  cursor: grab;
+  border: 1px solid #1f425f;
+}
+
+.zodiac-canvas:active {
+  cursor: grabbing;
+}
+
+.hint,
+.muted,
+.status {
+  margin: 0.45rem 0;
+  font-size: 0.9rem;
+}
+
+.error {
+  color: #a23131;
+}
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+label {
+  display: block;
+  font-size: 0.92rem;
+  margin-bottom: 0.6rem;
+}
+
+input,
+select,
+button {
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid #cbb697;
+  border-radius: 8px;
+  font-family: inherit;
+}
+
+button {
+  background: #efddbf;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #e5cca7;
+}
+
+.row {
+  display: grid;
+  gap: 0.45rem;
+  grid-template-columns: repeat(3, 1fr);
+  margin-bottom: 0.6rem;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.toggle input {
+  width: auto;
+  margin: 0;
+}
+
+.element-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  border-top: 1px dashed #d8c5a8;
+  padding: 0.38rem 0;
+}
+
+.element-row span {
+  opacity: 0.9;
+}
+
+.element-row strong {
+  text-align: right;
+  max-width: 67%;
+  word-break: break-word;
+}
+
+.phase-bar {
+  width: 100%;
+  height: 10px;
+  background: #c2d6df;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.phase-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1b607d, #f3c36b);
+}
+
+.formula-row {
+  border-top: 1px dashed #d9c8ad;
+  padding: 0.5rem 0;
+}
+
+code {
+  display: block;
+  white-space: normal;
+  font-family: ui-monospace, Menlo, Monaco, monospace;
+  padding: 0.5rem;
+  border-radius: 8px;
+  background: #efe6d7;
+}
+
+@media (max-width: 1020px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-pane {
+    max-height: none;
+  }
+
+  .zodiac-canvas {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+}
